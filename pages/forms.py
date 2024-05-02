@@ -1,12 +1,11 @@
-from django.forms import ModelForm
+from django import forms
 
-from pages.models import Search
+class SearchForm(forms.Form):
+    search = forms.CharField(max_length=100)
 
-class SearchForm(ModelForm):
-    class Meta:
-        model = Search
-        fields = ['keywords']
-        labels = {
-            'keywords': 'Palabras clave'
-        }
-    
+    def clean_search(self):
+        search = self.cleaned_data['search']
+        if len(search) < 3:
+            raise forms.ValidationError('La busqueda debe contener al menos 3 caracteres')
+        return search
+   

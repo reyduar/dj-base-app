@@ -9,10 +9,34 @@
       <div class="col-md-9 mx-auto">
         <div>
             <form action="" method="post">{% csrf_token %}
-                {{form.keywords}}
+                <input id="search" 
+                name="search" 
+                type="text" 
+                class="form-control" 
+                value="{{keywords}}"
+                placeholder="Buscar por nombre">
                 <br>
-                <input type="submit" value="Search" />
+                <input 
+                type="submit" 
+                class="btn btn-primary btn-block" 
+                value="Buscar" />
+                {{form.errors}}
             </form>
+            <div class="container mb-4">
+                {% for page in pages %}
+                  <div class="row mt-3">
+                    <div class="col-md-9 mx-auto">
+                      <h2 class="mb-4">{{page.title}}</h2>
+                      <div>
+                        <p>{{page.content|striptags|safe|truncatechars:"200"}}</p>
+                        <p><a href="{% url 'pages:page' page.id page.title|slugify %}">Leer más</a>
+                         
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
         </div>
       </div>
     </div>

@@ -9,12 +9,10 @@ class Page(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name="Fecha de edición")
 
     class Meta:
-        verbose_name = "página"
-        verbose_name_plural = "páginas"
+        verbose_name = "pagina"
+        verbose_name_plural = "paginas"
         ordering = ['order', 'title']
 
     def __str__(self):
         return self.title
 
-class Search(models.Model):
-    keywords = models.CharField(verbose_name="Keywords", max_length=200)

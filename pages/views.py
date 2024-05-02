@@ -3,8 +3,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import FormView
-from django.urls import reverse_lazy
-from django import forms
+from django.views.generic.base import TemplateView
 
 from pages.forms import SearchForm
 from .models import Page
@@ -16,18 +15,21 @@ class PagesListView(ListView):
 class PagesDetailView(DetailView):
     model = Page
 
-class PagesCreateView(FormView):
+class PagesSearchView(TemplateView):
      template_name = "pages/page_form.html"
-     
-     
+     model = Page
      def get(self, request, *args, **kwargs):
-         form = SearchForm()
-         print(form.fields.values())
-         return render(request, self.template_name, {'form': form})
+        list_results = Page.objects.all()
+        form = SearchForm()
+        return render(request, self.template_name, {'form': form, 'pages': list_results})
+     
      def post(self, request, *args, **kwargs):
         form = SearchForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
-        return render(request, self.template_name, {'form': form})
+            keywords = form.cleaned_data['search']
+            results = Page.objects.filter(title__icontains=keywords)
+            list_results = results
+
+        return render(request, self.template_name, {'form': form, 'keywords': keywords, 'pages': list_results})
      
 
